@@ -79,7 +79,7 @@ class LareDatabase:
     def get_next_unlabeled(self, after: int = -1) -> dict | None:
         row = self.conn.execute(
             'SELECT * FROM labeling_queue '
-            'WHERE final_label IS NULL AND queue_order > ? '
+            'WHERE (final_label IS NULL OR TRIM(final_label) = \'\') AND queue_order > ? '
             'ORDER BY queue_order ASC LIMIT 1',
             (after,)
         ).fetchone()
@@ -88,7 +88,7 @@ class LareDatabase:
     def set_label(self, entry_id: str, label: str) -> None:
         self._write(
             'UPDATE labeling_queue SET final_label = ? WHERE entry_id = ?',
-            (label, entry_id),
+            (label.strip(), entry_id),
         )
 
     def clear_label(self, entry_id: str) -> None:
@@ -116,7 +116,7 @@ class LareDatabase:
     def get_audit_stats(self) -> tuple[int, int]:
         row = self.conn.execute(
             'SELECT '
-            'COUNT(CASE WHEN final_label IS NOT NULL THEN 1 END) AS labeled, '
+            'COUNT(CASE WHEN final_label IS NOT NULL AND TRIM(final_label) != \'\' THEN 1 END) AS labeled, '
             'COUNT(*) AS total '
             'FROM labeling_queue'
         ).fetchone()
@@ -132,7 +132,8 @@ class LareDatabase:
 
     def get_all_labeled(self) -> list[dict]:
         rows = self.conn.execute(
-            'SELECT * FROM labeling_queue WHERE final_label IS NOT NULL '
+            'SELECT * FROM labeling_queue '
+            'WHERE final_label IS NOT NULL AND TRIM(final_label) != \'\' '
             'ORDER BY queue_order'
         ).fetchall()
         return [dict(r) for r in rows]
