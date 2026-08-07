@@ -18,16 +18,18 @@ export function useKeyboardShortcuts({
         if (!enabled) return;
 
         const handler = (e: KeyboardEvent) => {
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+
             const active = document.activeElement;
             if (
-                active?.tagName === "INPUT" ||
-                active?.tagName === "TEXTAREA" ||
-                active?.tagName === "SELECT"
+                active?.tagName === 'INPUT' ||
+                active?.tagName === 'TEXTAREA' ||
+                active?.tagName === 'SELECT'
             ) {
                 return;
             }
 
-            if (e.key === "Backspace" || e.key === "ArrowLeft") {
+            if (e.key === 'Backspace' || e.key === 'ArrowLeft') {
                 e.preventDefault();
                 onPrevious();
                 return;
