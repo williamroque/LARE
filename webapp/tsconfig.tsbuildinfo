@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/vite-env.d.ts","./src/components/controlpanel.tsx","./src/components/imagegrid.tsx","./src/components/jumptoinput.tsx","./src/components/labelbutton.tsx","./src/hooks/usekeyboardshortcuts.ts","./src/hooks/usenavigationstack.ts"],"version":"5.9.3"}
