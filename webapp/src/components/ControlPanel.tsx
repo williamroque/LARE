@@ -1,6 +1,6 @@
-import type { LabelInfo, EntryData, StatsData } from "../api";
-import { LabelButton } from "./LabelButton";
-import { JumpToInput } from "./JumpToInput";
+import type { LabelInfo, EntryData, StatsData } from '../api';
+import { LabelButton } from './LabelButton';
+import { JumpToInput } from './JumpToInput';
 
 interface ControlPanelProps {
     entry: EntryData | null;
@@ -22,22 +22,22 @@ export function ControlPanel({
     canGoBack,
 }: ControlPanelProps) {
     return (
-        <div className="flex h-full flex-col">
-            <div className="border-b border-white/8 px-5 py-4">
+        <div className='flex flex-col h-full'>
+            <div className='px-5 py-4 border-stone-300 border-b'>
                 <h1
-                    className="truncate font-mono text-lg font-bold tracking-tight text-white"
-                    title={entry?.display_id || ""}
+                    className='font-serif font-semibold text-stone-900 text-xl break-all break-words tracking-tight'
+                    title={entry?.display_id || ''}
                 >
-                    {entry?.display_id || "—"}
+                    {entry?.display_id || '—'}
                 </h1>
                 {entry && (
-                    <p className="mt-1 font-mono text-xs text-white/30">
+                    <p className='mt-0.5 font-mono text-stone-500 text-xs'>
                         #{entry.queue_order}
                     </p>
                 )}
             </div>
 
-            <div className="flex-1 space-y-2.5 overflow-y-auto px-5 py-4">
+            <div className='flex flex-col flex-1 gap-2 space-y-2 px-5 py-4 overflow-y-auto'>
                 {entry &&
                     labels.map((label) => (
                         <LabelButton
@@ -50,59 +50,53 @@ export function ControlPanel({
                     ))}
 
                 {!entry && (
-                    <div className="flex flex-col items-center justify-center py-12">
-                        <div className="rounded-full bg-green-500/10 p-4">
+                    <div className='flex flex-col justify-center items-center py-12'>
+                        <div className='p-4 border border-stone-300 rounded-full'>
                             <svg
-                                className="h-8 w-8 text-green-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                                className='w-6 h-6 text-stone-700'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                stroke='currentColor'
                             >
                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
                                     strokeWidth={2}
-                                    d="M5 13l4 4L19 7"
+                                    d='M5 13l4 4L19 7'
                                 />
                             </svg>
                         </div>
-                        <p className="mt-3 text-sm font-medium text-green-400/80">
+                        <p className='mt-3 font-sans text-stone-700 text-sm'>
                             All entries reviewed
                         </p>
                     </div>
                 )}
             </div>
 
-            <div className="border-t border-white/8 px-5 py-4 space-y-3">
+            <div className='space-y-4 px-5 py-4 border-stone-300 border-t'>
                 {stats && (
-                    <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs">
-                            <span className="text-white/40">Progress</span>
-                            <span className="font-mono text-white/60">
-                                {stats.labeled}/{stats.total} (
-                                {stats.progress_pct}%)
+                    <div className='space-y-1.5'>
+                        <div className='flex justify-between text-xs'>
+                            <span className='font-medium text-stone-600'>Progress</span>
+                            <span className='font-mono text-stone-700'>
+                                {stats.labeled}/{stats.total} ({stats.progress_pct}%)
                             </span>
                         </div>
-                        <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                        <div className='rounded-full h-1.5 overflow-hidden'>
                             <div
-                                className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-700"
+                                className='rounded-full h-full'
                                 style={{ width: `${stats.progress_pct}%` }}
                             />
                         </div>
                     </div>
                 )}
 
-                <div className="flex gap-2">
+                <div className='flex gap-2'>
                     <button
-                        id="btn-previous"
+                        id='btn-previous'
                         onClick={onPrevious}
                         disabled={!canGoBack}
-                        className="
-              flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2
-              text-xs font-medium text-white/60 transition-all cursor-pointer
-              hover:border-white/20 hover:bg-white/10 hover:text-white/80
-              disabled:cursor-not-allowed disabled:opacity-30
-            "
+                        className='flex-1 bg-white hover:bg-stone-100 disabled:opacity-40 px-3 py-2 border border-stone-400 hover:border-stone-800 rounded font-medium text-stone-800 text-xs cursor-pointer disabled:cursor-not-allowed'
                     >
                         ← Previous
                     </button>

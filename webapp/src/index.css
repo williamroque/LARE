@@ -1,34 +1,68 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('./assets/fonts/Inter.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'EB Garamond';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('./assets/fonts/EBGaramond.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'EB Garamond';
+    font-style: italic;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('./assets/fonts/EBGaramond.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('./assets/fonts/JetBrainsMono.ttf') format('truetype');
+}
 
 @theme {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'EB Garamond', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
-*,
-*::before,
-*::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@layer base {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation-duration: 0.001ms !important;
+    }
 
-html,
-body,
-#root {
-    height: 100%;
-    overflow: hidden;
-}
+    html,
+    body,
+    #root {
+        height: 100%;
+        overflow: hidden;
+    }
 
-body {
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background: #020617;
-    color: #f8fafc;
+    body {
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #1c1917;
+    }
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -36,10 +70,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    background: #d6d3d1;
+    border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: #a8a29e;
 }

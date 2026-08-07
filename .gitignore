@@ -55,6 +55,7 @@ pnpm-debug.log*
 out/
 dist/
 .astro/
+static/
 
 # Astronomy & Data Files
 *.fits

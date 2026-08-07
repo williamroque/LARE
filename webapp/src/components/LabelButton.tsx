@@ -1,4 +1,4 @@
-import type { LabelInfo } from "../api";
+import type { LabelInfo } from '../api';
 
 interface LabelButtonProps {
     label: LabelInfo;
@@ -18,27 +18,26 @@ export function LabelButton({
             id={`label-btn-${label.shortcut}`}
             onClick={onClick}
             className={`
-        group relative w-full rounded-xl border px-5 py-4 text-left
-        transition-all duration-200 ease-out cursor-pointer
+        group relative w-full rounded border px-4 py-3 text-left cursor-pointer
         ${
             isActive
-                ? "border-indigo-400 bg-indigo-500/20 shadow-lg shadow-indigo-500/10"
-                : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10"
+                ? 'border-stone-900 text-white'
+                : 'border-stone-300 text-stone-800 hover:border-stone-500 hover:bg-stone-50'
         }
       `}
         >
-            <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-white/90">
+            <div className='flex items-center justify-between'>
+                <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-stone-900'}`}>
                     {label.title}
                 </span>
                 <kbd
                     className={`
-          inline-flex h-6 min-w-6 items-center justify-center rounded-md
-          border px-1.5 font-mono text-xs font-medium
+          inline-flex h-5 min-w-5 items-center justify-center rounded
+          border px-1.5 font-mono text-xs font-semibold
           ${
               isActive
-                  ? "border-indigo-400/50 bg-indigo-500/30 text-indigo-200"
-                  : "border-white/15 bg-white/8 text-white/50 group-hover:text-white/70"
+                  ? 'border-stone-700 bg-stone-800 text-stone-200'
+                  : 'border-stone-300 bg-stone-100 text-stone-600'
           }
         `}
                 >
@@ -46,18 +45,18 @@ export function LabelButton({
                 </kbd>
             </div>
             {score !== null && score !== undefined && (
-                <div className="mt-2 flex items-center gap-2">
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+                <div className='mt-2 flex items-center gap-2'>
+                    <div className={`h-1 flex-1 overflow-hidden rounded-full ${isActive ? 'bg-stone-700' : 'bg-stone-200'}`}>
                         <div
-                            className={`h-full rounded-full transition-all duration-500 ${
-                                isActive ? "bg-indigo-400" : "bg-white/25"
+                            className={`h-full rounded-full ${
+                                isActive ? 'bg-white' : 'bg-stone-700'
                             }`}
                             style={{
                                 width: `${Math.min(Math.max(score * 100, 0), 100)}%`,
                             }}
                         />
                     </div>
-                    <span className="font-mono text-xs text-white/40">
+                    <span className={`font-mono text-xs ${isActive ? 'text-stone-300' : 'text-stone-500'}`}>
                         {score.toFixed(3)}
                     </span>
                 </div>

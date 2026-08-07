@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
-import type { AppConfig, EntryData, LabelInfo, StatsData } from "./api";
+import { useState, useEffect, useCallback } from 'react';
+import type { AppConfig, EntryData, LabelInfo, StatsData } from './api';
 import {
     fetchConfig,
     fetchEntry,
     fetchNext,
     fetchStats,
     submitLabel,
-} from "./api";
-import { ImageGrid } from "./components/ImageGrid";
-import { ControlPanel } from "./components/ControlPanel";
-import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
-import { useNavigationStack } from "./hooks/useNavigationStack";
+} from './api';
+import { ImageGrid } from './components/ImageGrid';
+import { ControlPanel } from './components/ControlPanel';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { useNavigationStack } from './hooks/useNavigationStack';
 
 export default function App() {
     const [config, setConfig] = useState<AppConfig | null>(null);
@@ -80,22 +80,22 @@ export default function App() {
 
     if (loading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-slate-950">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-indigo-400" />
-                    <p className="text-sm text-white/40">Loading project...</p>
+            <div className='flex h-screen items-center justify-center text-stone-800'>
+                <div className='flex flex-col items-center gap-3'>
+                    <div className='h-6 w-6 rounded-full border-2 border-stone-300 border-t-stone-800' />
+                    <p className='font-serif italic text-sm text-stone-600'>Loading project...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="flex h-screen bg-slate-950 text-white">
-            <div className="flex flex-1 min-w-0">
+        <div className='flex h-screen text-stone-900 font-sans'>
+            <div className='flex flex-1 min-w-0'>
                 <ImageGrid images={entry?.images ?? []} />
             </div>
 
-            <div className="w-80 flex-shrink-0 border-l border-white/8 bg-slate-900/50">
+            <div className='w-80 flex-shrink-0 border-l border-stone-300'>
                 <ControlPanel
                     entry={entry}
                     labels={config?.labels ?? []}
