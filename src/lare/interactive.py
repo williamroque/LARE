@@ -16,6 +16,37 @@ from lare.config import (
 from lare.console import console, log_step, log_success
 
 
+class q:
+    style = questionary.Style([
+        ('qmark', 'fg:#06b6d4 bold'),
+        ('question', 'bold'),
+        ('answer', 'fg:#06b6d4'),
+        ('pointer', 'fg:#06b6d4 bold'),
+        ('highlighted', 'fg:#06b6d4 bold'),
+        ('selected', 'fg:#06b6d4'),
+        ('separator', 'fg:#cc5454'),
+        ('instruction', 'fg:#858585'),
+        ('text', ''),
+        ('disabled', 'fg:#858585 italic')
+    ])
+    
+    @classmethod
+    def path(cls, *args, **kwargs):
+        return questionary.path(*args, style=cls.style, qmark='◆', **kwargs)
+        
+    @classmethod
+    def text(cls, *args, **kwargs):
+        return questionary.text(*args, style=cls.style, qmark='◆', **kwargs)
+        
+    @classmethod
+    def confirm(cls, *args, **kwargs):
+        return questionary.confirm(*args, style=cls.style, qmark='◆', **kwargs)
+        
+    @classmethod
+    def select(cls, *args, **kwargs):
+        return questionary.select(*args, style=cls.style, qmark='◆', pointer='❯', **kwargs)
+
+
 def _read_csv_headers(csv_path: str) -> list[str]:
     with open(csv_path) as f:
         header_line = f.readline().strip()
@@ -23,18 +54,21 @@ def _read_csv_headers(csv_path: str) -> list[str]:
 
 
 def _show_columns(headers: list[str]) -> None:
-    table = Table(title='Detected CSV Columns')
+    from rich import box
+    console.print()
+    table = Table(title='Detected CSV Columns', box=box.SIMPLE, show_edge=False)
     table.add_column('#', style='dim')
     table.add_column('Column Name', style='cyan')
     for i, h in enumerate(headers):
         table.add_row(str(i), h)
     console.print(table)
+    console.print()
 
 
 def run_wizard() -> LareConfig:
-    console.print('\n[bold]LARE Configuration Wizard[/]\n')
+    console.print('\n[bold cyan]LARE[/] Configuration Wizard\n')
 
-    csv_path = questionary.path(
+    csv_path = q.path(
         'Path to your source CSV file:',
         only_directories=False,
     ).ask()
@@ -46,34 +80,34 @@ def run_wizard() -> LareConfig:
     headers = _read_csv_headers(csv_path)
     _show_columns(headers)
 
-    project = questionary.text(
+    project = q.text(
         'Output database filename:',
         default='project.lare',
     ).ask()
 
-    has_image_dir = questionary.confirm(
+    has_image_dir = q.confirm(
         'Are image paths relative to a base directory?',
         default=False,
     ).ask()
 
     image_directory = None
     if has_image_dir:
-        image_directory = questionary.path(
+        image_directory = q.path(
             'Base image directory:',
             only_directories=True,
         ).ask()
 
-    id_column = questionary.select(
+    id_column = q.select(
         'Which column contains the entry identifier?',
         choices=headers,
     ).ask()
 
-    id_display_method = questionary.select(
+    id_display_method = q.select(
         'How should entry IDs be displayed?',
         choices=['raw', 'basename', 'stem'],
     ).ask()
 
-    has_filter = questionary.confirm(
+    has_filter = q.confirm(
         'Apply a SQL filter expression?',
         default=False,
     ).ask()
@@ -83,14 +117,14 @@ def run_wizard() -> LareConfig:
         console.print(
             '[dim]Example: GREATEST(sim_class_0, sim_class_1) > 0.1[/]'
         )
-        filter_method = questionary.text(
+        filter_method = q.text(
             'SQL filter expression:',
         ).ask()
 
     console.print(
         '[dim]Example: GREATEST(sim_class_0, sim_class_1, sim_class_2)[/]'
     )
-    ranking_score = questionary.text(
+    ranking_score = q.text(
         'SQL expression for ranking score:',
     ).ask()
 
@@ -98,14 +132,14 @@ def run_wizard() -> LareConfig:
     while True:
         console.print(f'\n[bold]Image #{len(images) + 1}[/]')
 
-        img_column = questionary.select(
+        img_column = q.select(
             'Column containing the image path:',
             choices=headers,
         ).ask()
 
-        img_title = questionary.text('Display title for this image:').ask()
+        img_title = q.text('Display title for this image:').ask()
 
-        img_format = questionary.select(
+        img_format = q.select(
             'Image format:',
             choices=['fits', 'png', 'jpg', 'jpeg', 'tiff'],
         ).ask()
@@ -114,28 +148,28 @@ def run_wizard() -> LareConfig:
         min_thresh = 0.5
         max_thresh = 99.5
         if img_format == 'fits':
-            stretching = questionary.select(
+            stretching = q.select(
                 'Stretching method:',
                 choices=['asinh', 'linear', 'sqrt', 'log', 'power'],
                 default='asinh',
             ).ask()
-            min_thresh = float(questionary.text(
+            min_thresh = float(q.text(
                 'Min percentile threshold:',
                 default='0.5',
             ).ask())
-            max_thresh = float(questionary.text(
+            max_thresh = float(q.text(
                 'Max percentile threshold:',
                 default='99.5',
             ).ask())
 
         subdirectory = None
         if image_directory:
-            has_subdir = questionary.confirm(
+            has_subdir = q.confirm(
                 'Does this image type live in a subdirectory?',
                 default=False,
             ).ask()
             if has_subdir:
-                subdirectory = questionary.text(
+                subdirectory = q.text(
                     'Subdirectory name:',
                 ).ask()
 
@@ -149,7 +183,7 @@ def run_wizard() -> LareConfig:
             subdirectory=subdirectory,
         ))
 
-        if not questionary.confirm('Add another image?', default=False).ask():
+        if not q.confirm('Add another image?', default=False).ask():
             break
 
     labels: list[LabelConfig] = []
@@ -157,15 +191,15 @@ def run_wizard() -> LareConfig:
     while True:
         console.print(f'\n[bold]Label #{len(labels) + 1}[/]')
 
-        label_column = questionary.select(
+        label_column = q.select(
             'Column containing the prediction score:',
             choices=headers,
         ).ask()
 
-        label_title = questionary.text('Display title for this label:').ask()
+        label_title = q.text('Display title for this label:').ask()
 
         while True:
-            shortcut = questionary.text(
+            shortcut = q.text(
                 'Keyboard shortcut (single letter):',
             ).ask()
             if shortcut and len(shortcut) == 1 and shortcut.isalpha():
@@ -184,7 +218,7 @@ def run_wizard() -> LareConfig:
             shortcut=shortcut.lower(),
         ))
 
-        if not questionary.confirm('Add another label?', default=False).ask():
+        if not q.confirm('Add another label?', default=False).ask():
             break
 
     config = LareConfig(
@@ -208,7 +242,7 @@ def run_wizard() -> LareConfig:
 
     print_config_table(config_to_dict(config))
 
-    if questionary.confirm('Write this configuration?', default=True).ask():
+    if q.confirm('Write this configuration?', default=True).ask():
         output_path = 'lare_config.toml'
         write_config(config, output_path)
         log_success(f'Configuration written to {output_path}')

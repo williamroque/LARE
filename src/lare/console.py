@@ -9,24 +9,27 @@ console = Console()
 
 
 def log_step(msg: str) -> None:
-    console.print(f'[bold cyan]▸[/] {msg}')
+    console.print(f'\n[bold cyan]ℹ[/] {msg}')
 
 
 def log_success(msg: str) -> None:
-    console.print(f'[bold green]✓[/] {msg}')
+    console.print(f'\n[bold green]✔[/] {msg}')
 
 
 def log_warning(msg: str) -> None:
-    console.print(f'[bold yellow]⚠[/] {msg}')
+    console.print(f'\n[bold yellow]⚠[/] {msg}')
 
 
 def log_error(msg: str) -> None:
-    console.print(f'[bold red]✗[/] {msg}')
+    console.print(f'\n[bold red]✖[/] {msg}')
     raise click.Abort()
 
 
 def print_config_table(config_dict: dict) -> None:
-    table = Table(title='Project Configuration', show_lines=True)
+    from rich import box
+    
+    console.print()
+    table = Table(title='Project Configuration', show_lines=False, box=box.SIMPLE, show_edge=False)
     table.add_column('Parameter', style='cyan')
     table.add_column('Value', style='white')
 
@@ -49,20 +52,28 @@ def print_config_table(config_dict: dict) -> None:
 
 
 def print_audit_banner(labeled: int, total: int) -> None:
+    from rich import box
+    
+    console.print()
     if labeled < total:
         console.print(Panel(
             f'Exported {labeled} entries.\n'
-            f'[bold yellow]Alert:[/] You have only audited '
-            f'{labeled}/{total} filtered entries in this project database!',
-            title='⚠ Audit Warning',
+            f'[yellow]Alert:[/] You have only audited '
+            f'{labeled}/{total} filtered entries in this project database.',
+            title='[bold yellow]⚠ Audit Incomplete[/]',
             border_style='yellow',
+            box=box.ROUNDED,
+            padding=(1, 2)
         ))
     else:
         console.print(Panel(
             f'Exported {labeled}/{total} entries — full audit complete.',
-            title='✓ Audit Complete',
+            title='[bold green]✔ Audit Complete[/]',
             border_style='green',
+            box=box.ROUNDED,
+            padding=(1, 2)
         ))
+    console.print()
 
 
 def print_creation_summary(
@@ -71,7 +82,10 @@ def print_creation_summary(
     label_count: int,
     project_path: str,
 ) -> None:
-    table = Table(title='Project Created', show_lines=True)
+    from rich import box
+    
+    console.print()
+    table = Table(title='Project Created', show_lines=False, box=box.SIMPLE, show_edge=False)
     table.add_column('Metric', style='cyan')
     table.add_column('Value', style='white')
     table.add_row('Source rows', str(rows_before))
@@ -79,3 +93,4 @@ def print_creation_summary(
     table.add_row('Labels registered', str(label_count))
     table.add_row('Database path', project_path)
     console.print(table)
+    console.print()
