@@ -79,6 +79,7 @@ def create_app(db_path: str) -> FastAPI:
                 'label': lb.label,
                 'title': lb.title,
                 'shortcut': lb.shortcut,
+                'is_emergent': getattr(lb, 'is_emergent', False),
             })
 
         images_info = []

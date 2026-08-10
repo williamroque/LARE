@@ -2,6 +2,7 @@ export interface LabelInfo {
     label: string;
     title: string;
     shortcut: string;
+    is_emergent: boolean;
 }
 
 export interface ImageInfo {

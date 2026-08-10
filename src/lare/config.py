@@ -52,6 +52,7 @@ class LabelConfig(BaseModel):
     label: str
     title: str
     shortcut: str
+    is_emergent: bool = False
 
     @field_validator('shortcut')
     @classmethod

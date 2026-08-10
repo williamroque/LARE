@@ -32,20 +32,27 @@ def create(csv_file: str | None, config_path: str | None, no_project: bool):
 
     config: LareConfig | None = None
 
-    if config_path:
-        log_step(f'Loading config from {config_path}')
-        config = load_config(config_path)
-    elif Path('lare_config.toml').exists():
-        use_existing = questionary.confirm(
-            'Found existing lare_config.toml. Use this to initialize the project?',
-            default=True,
-        ).ask()
-        if use_existing:
-            config = load_config('lare_config.toml')
+    try:
+        if config_path:
+            log_step(f'Loading config from {config_path}')
+            config = load_config(config_path)
+        elif Path('lare_config.toml').exists():
+            use_existing = questionary.confirm(
+                'Found existing lare_config.toml. Use this to initialize the project?',
+                default=True,
+            ).ask()
+            if use_existing is None:
+                console.print('\n[yellow]Wizard cancelled.[/yellow]')
+                raise SystemExit(1)
+            if use_existing:
+                config = load_config('lare_config.toml')
+            else:
+                config = run_wizard()
         else:
             config = run_wizard()
-    else:
-        config = run_wizard()
+    except KeyboardInterrupt:
+        console.print('\n[yellow]Wizard cancelled.[/yellow]')
+        raise SystemExit(1)
 
     if config is None:
         log_error('No configuration provided')
