@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="assets/wordmark.svg" width="400">
+    <img src="https://raw.githubusercontent.com/williamroque/LARE/refs/heads/main/assets/wordmark.svg" width="500">
 </h1>
 
 A high-velocity, self-contained inference auditing and dataset labeling tool. LARE provides a highly optimized pipeline for reviewing and classifying multimodal data (e.g., FITS images and attention maps) using a structured, keyboard-driven web interface and a robust SQLite-backed queuing system.
