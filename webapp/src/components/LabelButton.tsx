@@ -21,31 +21,33 @@ export function LabelButton({
         group relative w-full rounded border px-4 py-3 text-left cursor-pointer
         ${
             isActive
-                ? 'border-stone-900 text-white'
-                : 'border-stone-300 text-stone-800 hover:border-stone-500 hover:bg-stone-50'
+                ? 'text-stone-300 border-stone-900 bg-stone-900'
+                : 'text-stone-800 border-stone-300 hover:border-stone-500 hover:bg-stone-50'
         }
       `}
         >
-            <div className='flex items-center justify-between'>
-                <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-stone-900'}`}>
+            <div className='flex justify-between items-center'>
+                <span className={`
+                    text-sm font-medium
+                    ${isActive ? 'text-stone-300' : 'text-stone-900'}
+                `}>
                     {label.title}
                 </span>
                 <kbd
                     className={`
-          inline-flex h-5 min-w-5 items-center justify-center rounded
-          border px-1.5 font-mono text-xs font-semibold
-          ${
-              isActive
-                  ? 'border-stone-700 bg-stone-800 text-stone-200'
-                  : 'border-stone-300 bg-stone-100 text-stone-600'
-          }
-        `}
+                        inline-flex h-5 min-w-5 items-center justify-center rounded
+                        border px-1.5 font-mono text-xs font-semibold
+                        ${isActive
+                            ? 'border-stone-700 bg-stone-800 text-stone-200'
+                            : 'border-stone-300 bg-stone-100 text-stone-600'
+                        }
+                    `}
                 >
                     {label.shortcut}
                 </kbd>
             </div>
             {score !== null && score !== undefined && (
-                <div className='mt-2 flex items-center gap-2'>
+                <div className='flex items-center gap-2 mt-2'>
                     <div className={`h-1 flex-1 overflow-hidden rounded-full ${isActive ? 'bg-stone-700' : 'bg-stone-200'}`}>
                         <div
                             className={`h-full rounded-full ${

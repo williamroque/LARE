@@ -13,6 +13,7 @@ export function JumpToInput({ onSelect }: JumpToInputProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const listRef = useRef<HTMLDivElement>(null);
 
     const doSearch = useCallback(async (q: string) => {
         if (q.trim().length === 0) {
@@ -25,6 +26,14 @@ export function JumpToInput({ onSelect }: JumpToInputProps) {
         setSelectedIndex(0);
         setIsOpen(data.length > 0);
     }, []);
+
+    useEffect(() => {
+        if (!isOpen || !listRef.current) return;
+        const selectedItem = listRef.current.children[selectedIndex] as HTMLElement | undefined;
+        if (selectedItem) {
+            selectedItem.scrollIntoView({ block: 'nearest' });
+        }
+    }, [selectedIndex, isOpen]);
 
     useEffect(() => {
         if (timerRef.current) clearTimeout(timerRef.current);
@@ -104,8 +113,10 @@ export function JumpToInput({ onSelect }: JumpToInputProps) {
 
             {isOpen && results.length > 0 && (
                 <div
+                    ref={listRef}
                     className='
-          absolute left-0 right-0 top-full z-50 mt-1
+          absolute right-0 bottom-full z-50 mb-1
+          w-max min-w-full max-w-xs
           max-h-48 overflow-y-auto
           rounded border border-stone-300 bg-white shadow-md
         '
@@ -115,7 +126,7 @@ export function JumpToInput({ onSelect }: JumpToInputProps) {
                             key={r.queue_order}
                             onClick={() => handleSelect(r)}
                             className={`
-                flex w-full items-center justify-between px-3 py-2 text-left text-sm cursor-pointer
+                flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm cursor-pointer
                 ${
                     i === selectedIndex
                         ? 'bg-stone-900 text-white'
@@ -123,8 +134,8 @@ export function JumpToInput({ onSelect }: JumpToInputProps) {
                 }
               `}
                         >
-                            <span className='font-mono'>{r.display_id}</span>
-                            <span className={`text-xs ${i === selectedIndex ? 'text-stone-300' : 'text-stone-400'}`}>
+                            <span className='font-mono truncate min-w-0'>{r.display_id}</span>
+                            <span className={`text-xs shrink-0 ${i === selectedIndex ? 'text-stone-300' : 'text-stone-400'}`}>
                                 #{r.queue_order}
                             </span>
                         </button>
