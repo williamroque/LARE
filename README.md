@@ -7,29 +7,25 @@
 A high-velocity, self-contained inference auditing and dataset labeling tool. LARE provides a highly optimized pipeline for reviewing and classifying multimodal data (e.g., FITS images and attention maps) using a structured, keyboard-driven web interface and a robust SQLite-backed queuing system.
 
 ## Table of Contents
-- [Architecture & Lifecycle](#architecture--lifecycle)
+- [Installation](#installation)
 - [CLI Commands](#cli-commands)
+- [Architecture & Lifecycle](#architecture--lifecycle)
 - [Configuration Model](#configuration-model)
 - [Database Schema](#database-schema)
 - [Web UI & Ergonomics](#web-ui--ergonomics)
-- [Installation](#installation)
 
-## Architecture & Lifecycle
+## Installation
 
-LARE operates on a reproducible, self-contained architecture. The entire workflow is governed by a declarative template configuration (`lare_config.toml`) which compiles source data into an immutable, frozen SQLite database state (`project.lare`).
+Install the base package via pip:
 
-```mermaid
-flowchart TD
-    Config[lare_config.toml<br>Pure template / Project recipe]
-    CSV[Source CSV]
-    DB[(project.lare<br>Self-Contained DB)]
-    Run(lare run)
-    Export(lare export)
+```bash
+pip install lare
+```
 
-    Config --> |lare create| DB
-    CSV --> |lare create| DB
-    DB --> |Reads Only| Run
-    DB --> |Reads Only| Export
+To enable support for scientific FITS image processing (`astropy`, `matplotlib`, `numpy`), install with the `fits` extra:
+
+```bash
+pip install "lare[fits]"
 ```
 
 ## CLI Commands
@@ -59,6 +55,24 @@ Extracts classifications based on internal schema instructions.
   - `copy`: Aggregates the raw image files that received classifications and copies them to an organized target subdirectory pattern.
 - **Flags:** Requires `--strategy csv|copy` and `--output PATH`.
 - **Audit Metric Guard:** Validates the number of audited rows against the total queue and flashes a warning if the audit is incomplete.
+
+## Architecture & Lifecycle
+
+LARE operates on a reproducible, self-contained architecture. The entire workflow is governed by a declarative template configuration (`lare_config.toml`) which compiles source data into an immutable, frozen SQLite database state (`project.lare`).
+
+```mermaid
+flowchart TD
+    Config["lare_config.toml \n Pure template / Project recipe"]
+    CSV[Source CSV]
+    DB["project.lare \n Self-Contained DB"]
+    Run(lare run)
+    Export(lare export)
+
+    Config --> |lare create| DB
+    CSV --> |lare create| DB
+    DB --> |Reads Only| Run
+    DB --> |Reads Only| Export
+```
 
 ## Configuration Model
 
@@ -160,17 +174,3 @@ The user interface balances structural minimization with optimal keyboard tracki
 ### Image Serving Pipeline
 - **Decoupled Asset Threading:** The FastAPI backend manages standard static local asset streaming.
 - **Pre-rendering:** Avoids computing complex transformations (asinh arrays, thresholds) iteratively on-the-fly. The server pre-processes image arrays, dumping lightweight web-friendly representations into a hidden footprint directory, which is purged when LARE closes (capped at a 25-image lookahead).
-
-## Installation
-
-Install the base package via pip:
-
-```bash
-pip install lare
-```
-
-To enable support for scientific FITS image processing (`astropy`, `matplotlib`, `numpy`), install with the `fits` extra:
-
-```bash
-pip install "lare[fits]"
-```
