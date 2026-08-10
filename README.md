@@ -2,6 +2,8 @@
     <img src="https://raw.githubusercontent.com/williamroque/LARE/refs/heads/main/assets/wordmark.svg" width="500">
 </h1>
 
+[![LARE - PyPI](https://img.shields.io/pypi/v/lare)](https://pypi.org/project/lare/)
+
 A high-velocity, self-contained inference auditing and dataset labeling tool. LARE provides a highly optimized pipeline for reviewing and classifying multimodal data (e.g., FITS images and attention maps) using a structured, keyboard-driven web interface and a robust SQLite-backed queuing system.
 
 ## Table of Contents
@@ -161,6 +163,14 @@ The user interface balances structural minimization with optimal keyboard tracki
 
 ## Installation
 
+Install the base package via pip:
+
 ```bash
 pip install lare
+```
+
+To enable support for scientific FITS image processing (`astropy`, `matplotlib`, `numpy`), install with the `fits` extra:
+
+```bash
+pip install "lare[fits]"
 ```

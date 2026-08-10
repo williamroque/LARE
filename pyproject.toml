@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lare"
-version = "0.1.0"
-description = "Label And Review Engine — high-velocity image classification auditing"
+version = "1.0.0"
+description = "Label Auditing & Reclassification Environment"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
