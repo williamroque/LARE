@@ -33,6 +33,7 @@ class ImageConfig(BaseModel):
     title: str
     format: Literal['fits', 'png', 'jpg', 'jpeg', 'tiff']
     stretching: str | None = None
+    colormap: str | None = None
     min_threshold: float = 0.5
     max_threshold: float = 99.5
     subdirectory: str | None = None
@@ -42,6 +43,13 @@ class ImageConfig(BaseModel):
     def stretching_requires_fits(cls, v: str | None, info) -> str | None:
         if v is not None and info.data.get('format') != 'fits':
             raise ValueError('stretching is only valid for FITS format images')
+        return v
+
+    @field_validator('colormap')
+    @classmethod
+    def colormap_requires_fits(cls, v: str | None, info) -> str | None:
+        if v is not None and info.data.get('format') != 'fits':
+            raise ValueError('colormap is only valid for FITS format images')
         return v
 
     @field_validator('subdirectory')

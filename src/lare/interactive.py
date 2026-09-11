@@ -178,6 +178,7 @@ def run_wizard() -> LareConfig:
             ).ask()
 
             stretching = None
+            colormap = None
             min_thresh = 0.5
             max_thresh = 99.5
             if img_format == 'fits':
@@ -185,6 +186,11 @@ def run_wizard() -> LareConfig:
                     'Stretching method:',
                     choices=['asinh', 'linear', 'sqrt', 'log', 'power'],
                     default='asinh',
+                ).ask()
+                colormap = q.select(
+                    'Color map:',
+                    choices=['gray', 'viridis', 'plasma', 'inferno', 'magma', 'cividis'],
+                    default='gray',
                 ).ask()
                 min_thresh = float(q.text(
                     'Min percentile threshold:',
@@ -211,6 +217,7 @@ def run_wizard() -> LareConfig:
                 title=img_title,
                 format=img_format,
                 stretching=stretching,
+                colormap=colormap,
                 min_threshold=min_thresh,
                 max_threshold=max_thresh,
                 subdirectory=subdirectory,

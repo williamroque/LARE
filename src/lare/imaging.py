@@ -46,13 +46,14 @@ def _render_fits(source: Path, dest: Path, image_config: ImageConfig) -> None:
         data = data[0]
 
     stretch = image_config.stretching or 'linear'
+    cmap = image_config.colormap or 'gray'
     norm = simple_norm(
         data,
         stretch=stretch,
         min_percent=image_config.min_threshold,
         max_percent=image_config.max_threshold,
     )
-    plt.imsave(str(dest), norm(data), cmap='gray', origin='lower')
+    plt.imsave(str(dest), norm(data), cmap=cmap, origin='lower')
 
 
 def _render_static(source: Path, dest: Path) -> None:
