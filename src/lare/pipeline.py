@@ -31,20 +31,22 @@ def load_and_process(config: LareConfig, csv_path: str) -> pl.DataFrame:
     if config.rules.filter_method:
         log_step(f'Applying filter: {config.rules.filter_method}')
         ctx = pl.SQLContext(data=df, eager=True)
-        df = ctx.execute(
-            f'SELECT * FROM data WHERE {config.rules.filter_method}'
-        ).collect() if hasattr(ctx.execute(
-            f'SELECT * FROM data WHERE {config.rules.filter_method}'
-        ), 'collect') else ctx.execute(
-            f'SELECT * FROM data WHERE {config.rules.filter_method}'
-        )
+        try:
+            query = f'SELECT * FROM data WHERE {config.rules.filter_method}'
+            res = ctx.execute(query)
+            df = res.collect() if hasattr(res, 'collect') else res
+        except Exception as err:
+            log_error(f'Failed to execute filter SQL expression: {err}')
         log_step(f'Rows after filter: {df.height}')
 
     log_step(f'Computing ranking score: {config.rules.ranking_score}')
     ctx = pl.SQLContext(data=df, eager=True)
-    df = ctx.execute(
-        f'SELECT *, ({config.rules.ranking_score}) AS _ranking_score FROM data'
-    )
+    try:
+        df = ctx.execute(
+            f'SELECT *, ({config.rules.ranking_score}) AS _ranking_score FROM data'
+        )
+    except Exception as err:
+        log_error(f'Failed to compute ranking score SQL expression: {err}')
 
     df = df.sort('_ranking_score', descending=True)
 
