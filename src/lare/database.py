@@ -130,7 +130,35 @@ class LareDatabase:
             raise RuntimeError('No project metadata found in database')
         return json.loads(row['config_json'])
 
-    def get_all_labeled(self) -> list[dict]:
+    def get_all_labeled(self, include_unaudited: bool = False, unaudited_label: str = 'unaudited', config_labels: list[str] | None = None, score_order: str = 'highest') -> list[dict]:
+        if include_unaudited:
+            rows = self.conn.execute(
+                'SELECT * FROM labeling_queue ORDER BY queue_order'
+            ).fetchall()
+            result = []
+            for r in rows:
+                d = dict(r)
+                if not d['final_label'] or not d['final_label'].strip():
+                    best_label = unaudited_label
+                    if config_labels:
+                        best_score = -float('inf') if score_order == 'highest' else float('inf')
+                        for label in config_labels:
+                            score = d.get(label)
+                            if score is not None:
+                                try:
+                                    score = float(score)
+                                    if score_order == 'highest' and score > best_score:
+                                        best_score = score
+                                        best_label = label
+                                    elif score_order == 'lowest' and score < best_score:
+                                        best_score = score
+                                        best_label = label
+                                except (ValueError, TypeError):
+                                    pass
+                    d['final_label'] = best_label
+                result.append(d)
+            return result
+
         rows = self.conn.execute(
             'SELECT * FROM labeling_queue '
             'WHERE final_label IS NOT NULL AND TRIM(final_label) != \'\' '

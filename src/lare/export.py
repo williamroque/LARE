@@ -9,19 +9,26 @@ from lare.console import console, log_step, log_success, print_audit_banner
 from lare.database import open_database
 
 
-def export_csv(db_path: str, output_path: str) -> None:
+def export_csv(db_path: str, output_path: str, include_unaudited: bool = False, unaudited_fallback: str = 'unaudited', score_order: str = 'highest') -> None:
     db = open_database(db_path)
     with db:
-        labeled = db.get_all_labeled()
+        config_dict = db.get_config()
+        config = parse_config_dict(config_dict)
+        labels = [lb.label for lb in config.labels]
+
+        labeled = db.get_all_labeled(include_unaudited=include_unaudited, unaudited_label=unaudited_fallback, config_labels=labels, score_order=score_order)
         labeled_count = len(labeled)
         total = db.get_total_count()
 
         if not labeled:
-            log_step('No labeled entries to export')
+            log_step('No entries to export')
             print_audit_banner(0, total)
             return
 
-        log_step(f'Exporting {labeled_count} labeled entries to CSV')
+        if include_unaudited:
+            log_step(f'Exporting all {labeled_count} entries to CSV')
+        else:
+            log_step(f'Exporting {labeled_count} labeled entries to CSV')
 
         fieldnames = list(labeled[0].keys())
         with open(output_path, 'w', newline='') as f:
@@ -33,24 +40,28 @@ def export_csv(db_path: str, output_path: str) -> None:
         print_audit_banner(labeled_count, total)
 
 
-def export_copy(db_path: str, output_path: str) -> None:
+def export_copy(db_path: str, output_path: str, include_unaudited: bool = False, unaudited_fallback: str = 'unaudited', score_order: str = 'highest') -> None:
     from rich.progress import Progress
 
     db = open_database(db_path)
     with db:
         config_dict = db.get_config()
         config = parse_config_dict(config_dict)
+        labels = [lb.label for lb in config.labels]
 
-        labeled = db.get_all_labeled()
+        labeled = db.get_all_labeled(include_unaudited=include_unaudited, unaudited_label=unaudited_fallback, config_labels=labels, score_order=score_order)
         labeled_count = len(labeled)
         total = db.get_total_count()
 
         if not labeled:
-            log_step('No labeled entries to export')
+            log_step('No entries to export')
             print_audit_banner(0, total)
             return
 
-        log_step(f'Copying {labeled_count} labeled entries')
+        if include_unaudited:
+            log_step(f'Copying all {labeled_count} entries')
+        else:
+            log_step(f'Copying {labeled_count} labeled entries')
         output_root = Path(output_path)
 
         with Progress(console=console) as progress:

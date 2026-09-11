@@ -119,16 +119,21 @@ def run(project: str, port: int):
 @click.argument('project', type=click.Path(exists=True))
 @click.option('--strategy', type=click.Choice(['csv', 'copy']), required=True, help='Export strategy')
 @click.option('--output', required=True, type=click.Path(), help='Output path')
-def export(project: str, strategy: str, output: str):
+@click.option('--include-unaudited', is_flag=True, help='Include unaudited entries in the export')
+@click.option('--unaudited-fallback', type=str, default='unaudited', help='Fallback label if no scores are available (default: "unaudited")')
+@click.option('--score-order', type=click.Choice(['highest', 'lowest']), default='highest', help='Which score is considered best (default: "highest")')
+def export(project: str, strategy: str, output: str, include_unaudited: bool, unaudited_fallback: str, score_order: str):
     '''Export classified entries from a LARE project.'''
     from lare.export import export_copy, export_csv
 
     log_step(f'Exporting from {project} using strategy: {strategy}')
+    if include_unaudited:
+        log_step(f'Including unaudited entries (using {score_order} score, fallback: {unaudited_fallback})')
 
     if strategy == 'csv':
-        export_csv(project, output)
+        export_csv(project, output, include_unaudited, unaudited_fallback, score_order)
     elif strategy == 'copy':
-        export_copy(project, output)
+        export_copy(project, output, include_unaudited, unaudited_fallback, score_order)
 
 
 if __name__ == '__main__':
