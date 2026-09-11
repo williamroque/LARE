@@ -15,6 +15,8 @@ export interface AppConfig {
     labels: LabelInfo[];
     images: ImageInfo[];
     id_display_method: string;
+    score_min: number;
+    score_max: number;
 }
 
 export interface ImageResult {

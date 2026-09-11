@@ -3,6 +3,8 @@ import type { LabelInfo } from '../api';
 interface LabelButtonProps {
     label: LabelInfo;
     score: number | null;
+    scoreMin: number;
+    scoreMax: number;
     isActive: boolean;
     onClick: () => void;
 }
@@ -10,9 +12,15 @@ interface LabelButtonProps {
 export function LabelButton({
     label,
     score,
+    scoreMin,
+    scoreMax,
     isActive,
     onClick,
 }: LabelButtonProps) {
+    const range = scoreMax - scoreMin;
+    const normalizedScore = score !== null ? (score - scoreMin) / (range || 1) : 0;
+    const widthPct = Math.min(Math.max(normalizedScore * 100, 0), 100);
+
     return (
         <button
             id={`label-btn-${label.shortcut}`}
@@ -54,7 +62,7 @@ export function LabelButton({
                                 isActive ? 'bg-white' : 'bg-stone-700'
                             }`}
                             style={{
-                                width: `${Math.min(Math.max(score * 100, 0), 100)}%`,
+                                width: `${widthPct}%`,
                             }}
                         />
                     </div>

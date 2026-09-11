@@ -24,6 +24,8 @@ class RulesConfig(BaseModel):
     ranking_score: str
     id_column: str
     id_display_method: Literal['raw', 'basename', 'stem'] = 'raw'
+    score_min: float = 0.0
+    score_max: float = 1.0
 
 
 class ImageConfig(BaseModel):

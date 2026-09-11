@@ -100,6 +100,8 @@ export default function App() {
                     entry={entry}
                     labels={config?.labels ?? []}
                     stats={stats}
+                    scoreMin={config?.score_min ?? 0.0}
+                    scoreMax={config?.score_max ?? 1.0}
                     onLabel={handleLabel}
                     onPrevious={handlePrevious}
                     onJumpTo={handleJumpTo}

@@ -109,14 +109,14 @@ def run_wizard() -> LareConfig:
         ).ask()
 
         has_image_dir = q.confirm(
-            'Are image paths relative to a base directory?',
+            'Convert absolute image paths to relative paths?',
             default=False,
         ).ask()
 
         image_directory = None
         if has_image_dir:
             image_directory = q.path(
-                'Base image directory:',
+                'Base image directory for relative paths:',
                 only_directories=True,
             ).ask()
 
@@ -150,6 +150,16 @@ def run_wizard() -> LareConfig:
         ranking_score = q.text(
             'SQL expression for ranking score:',
         ).ask()
+
+        score_min = float(q.text(
+            'Expected minimum score value (for UI progress bars):',
+            default='0.0',
+        ).ask())
+
+        score_max = float(q.text(
+            'Expected maximum score value (for UI progress bars):',
+            default='1.0',
+        ).ask())
 
         images: list[ImageConfig] = []
         while True:
@@ -266,6 +276,8 @@ def run_wizard() -> LareConfig:
                 ranking_score=ranking_score,
                 id_column=id_column,
                 id_display_method=id_display_method,
+                score_min=score_min,
+                score_max=score_max,
             ),
             images=images,
             labels=labels,

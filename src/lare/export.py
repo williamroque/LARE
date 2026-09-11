@@ -14,7 +14,7 @@ def export_csv(db_path: str, output_path: str, include_unaudited: bool = False, 
     with db:
         config_dict = db.get_config()
         config = parse_config_dict(config_dict)
-        labels = [lb.label for lb in config.labels]
+        labels = {lb.label: lb.title for lb in config.labels}
 
         labeled = db.get_all_labeled(include_unaudited=include_unaudited, unaudited_label=unaudited_fallback, config_labels=labels, score_order=score_order)
         labeled_count = len(labeled)
@@ -47,7 +47,7 @@ def export_copy(db_path: str, output_path: str, include_unaudited: bool = False,
     with db:
         config_dict = db.get_config()
         config = parse_config_dict(config_dict)
-        labels = [lb.label for lb in config.labels]
+        labels = {lb.label: lb.title for lb in config.labels}
 
         labeled = db.get_all_labeled(include_unaudited=include_unaudited, unaudited_label=unaudited_fallback, config_labels=labels, score_order=score_order)
         labeled_count = len(labeled)

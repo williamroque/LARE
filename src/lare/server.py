@@ -94,6 +94,8 @@ def create_app(db_path: str) -> FastAPI:
             'labels': labels_info,
             'images': images_info,
             'id_display_method': config.rules.id_display_method,
+            'score_min': config.rules.score_min,
+            'score_max': config.rules.score_max,
         }
 
     @app.get('/api/stats')

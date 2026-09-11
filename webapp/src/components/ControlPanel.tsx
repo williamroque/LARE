@@ -6,6 +6,8 @@ interface ControlPanelProps {
     entry: EntryData | null;
     labels: LabelInfo[];
     stats: StatsData | null;
+    scoreMin: number;
+    scoreMax: number;
     onLabel: (label: LabelInfo) => void;
     onPrevious: () => void;
     onJumpTo: (queueOrder: number) => void;
@@ -16,6 +18,8 @@ export function ControlPanel({
     entry,
     labels,
     stats,
+    scoreMin,
+    scoreMax,
     onLabel,
     onPrevious,
     onJumpTo,
@@ -44,6 +48,8 @@ export function ControlPanel({
                             key={label.shortcut}
                             label={label}
                             score={entry.scores[label.label] ?? null}
+                            scoreMin={scoreMin}
+                            scoreMax={scoreMax}
                             isActive={entry.final_label === label.title}
                             onClick={() => onLabel(label)}
                         />
